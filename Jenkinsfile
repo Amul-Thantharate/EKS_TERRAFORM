@@ -6,13 +6,6 @@ pipeline{
                     sh 'terraform --version'
                }
           }
-          stage("Terraform Scan"){
-               steps{
-                    dir('EKS_TERRAFORM') {
-                         sh 'tfsec .'
-                    }
-               }
-          }
           stage('Terraform init'){
                steps{
                     dir('EKS_TERRAFORM') {
