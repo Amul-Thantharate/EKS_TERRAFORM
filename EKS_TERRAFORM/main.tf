@@ -21,24 +21,14 @@ resource "aws_iam_role_policy_attachment" "example-AmazonEKSClusterPolicy" {
   role       = aws_iam_role.example.name
 }
 
-#get vpc data
-data "aws_vpc" "default" {
-  default = true
-}
-#get public subnets for cluster
-data "aws_subnets" "public" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
+
 #cluster provision
 resource "aws_eks_cluster" "example" {
   name     = "hoststar-cloud"
   role_arn = aws_iam_role.example.arn
 
   vpc_config {
-    subnet_ids = data.aws_subnets.public.ids
+    subnet_ids = ["subnet-055267002c7a9c25f", "subnet-06f9748265f37d661", "subnet-01a774d60f502cbbd"]
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
@@ -83,7 +73,7 @@ resource "aws_eks_node_group" "example" {
   cluster_name    = aws_eks_cluster.example.name
   node_group_name = "Todo-App"
   node_role_arn   = aws_iam_role.example1.arn
-  subnet_ids      = data.aws_subnets.public.ids
+  subnet_ids      = ["subnet-055267002c7a9c25f", "subnet-06f9748265f37d661", "subnet-01a774d60f502cbbd"]
 
   scaling_config {
     desired_size = 1
